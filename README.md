@@ -4,9 +4,9 @@ Repository to reproduce the basic bootstrap website examples and other bootstra 
 
 ## Steps for creating this symfony project for bootstrap 4
 
-$ symfony new boot --version=5.4 --webapp
-$ cd boot
-$ composer require oomphinc/composer-installers-extender
+    $ symfony new boot --version=5.4 --webapp
+    $ cd boot
+    $ composer require oomphinc/composer-installers-extender
 
 Edit extra section in composer.json:
 
@@ -20,7 +20,9 @@ Edit extra section in composer.json:
             "public/components/": ["type:component"]
         }
 
-$ composer require components/bootstrap
+Install bootstrap 4
+
+    $ composer require components/bootstrap
 
 Edit the base template to use the basic components
     <head>
