@@ -25,12 +25,12 @@ Install bootstrap 4
     $ composer require components/bootstrap
 
 Edit the base template to use the basic components
+
     <head>
     ...
             <link rel="stylesheet" href="{{ asset('/components/css/bootstrap.css') }}" />
     ...
     </head>
-
     <body>
     ...
           {% block javascripts %}
