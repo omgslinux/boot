@@ -1,6 +1,11 @@
 # Boot
 
-Repository to reproduce the basic bootstrap website examples and other bootstra stuff
+Repository to have bootstrap stuff installed and ready to use in a symfony project,
+together with a few website examples.
+You can just clone this repo and have a skeleton with basic symfony stuff and
+the bootstrap part installed to work "out-of-the-box". If you prefer to do all
+this manually, just follow the steps below.
+
 
 ## Steps for creating this symfony project for bootstrap 4
 
@@ -28,7 +33,7 @@ Edit the base template to use the basic components
 
     <head>
     ...
-            <link rel="stylesheet" href="{{ asset('/components/css/bootstrap.css') }}" />
+            <link rel="stylesheet" href="{{ asset('components/css/bootstrap.css') }}" />
     ...
     </head>
     <body>
@@ -39,7 +44,6 @@ Edit the base template to use the basic components
         <script src="{{ asset('components/jquery.slim.js') }}"></script>
         <!-- The bootstrap bundle includes the optional popper.js -->
         <script src="{{ asset('components/js/bootstrap.bundle.min.js') }}"></script>
-        {# encore_entry_script_tags('app') #}
       {% endblock %}
     </body>
 
