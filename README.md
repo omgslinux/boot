@@ -24,7 +24,7 @@ Edit extra section in composer.json:
         "installer-paths": {
             "public/components/": ["type:component"]
         }
-    }
+    },
 
 Install bootstrap 4
 
