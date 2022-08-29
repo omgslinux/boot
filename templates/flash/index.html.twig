@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Flash{% endblock %}
+
+{% block body %}
+
+
+
+
+
+<div class="section">
+<h3 id="flash-messages"><a class="headerlink" href="#flash-messages" title="Permalink to this headline">Flash Messages</a></h3>
+<p>You can also store special messages, called "flash" messages, on the user's
+session. By design, flash messages are meant to be used exactly once: they vanish
+from the session automatically as soon as you retrieve them. This feature makes
+"flash" messages particularly great for storing user notifications.</p>
+<p>For example, imagine you're processing a <a href="forms.html" class="reference internal">form</a> submission:</p>
+<div translate="no" data-loc="22" class="notranslate codeblock codeblock-length-md codeblock-php">
+        <div class="codeblock-scroll">
+        <pre class="codeblock-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+        <pre class="codeblock-code"><code><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">HttpFoundation</span>\<span class="hljs-title">Request</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">HttpFoundation</span>\<span class="hljs-title">Response</span>;
+<span class="hljs-comment">// ...</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">update</span><span class="hljs-params">(Request <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>request</span>)</span>: <span class="hljs-title">Response</span>
+</span>{
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>form</span><span class="hljs-operator">-&gt;</span>isSubmitted() &amp;&amp; <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>form</span><span class="hljs-operator">-&gt;</span>isValid()) {
+        <span class="hljs-comment">// do some sort of processing</span>
+
+        <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>this</span><span class="hljs-operator">-&gt;</span>addFlash(
+            <span class="hljs-string">'notice'</span>,
+            <span class="hljs-string">'Your changes were saved!'</span>
+        );
+        <span class="hljs-comment">// $this-&gt;addFlash() is equivalent to $request-&gt;getSession()-&gt;getFlashBag()-&gt;add()</span>
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>this</span><span class="hljs-operator">-&gt;</span>redirectToRoute(...);
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>this</span><span class="hljs-operator">-&gt;</span>render(...);
+}</code></pre>
+    </div>
+</div>
+<p>After processing the request, the controller sets a flash message in the session
+and then redirects. The message key (<code translate="no" class="notranslate">notice</code> in this example) can be anything:
+you'll use this key to retrieve the message.</p>
+<p>In the template of the next page (or even better, in your base layout template),
+read any flash messages from the session using the <code translate="no" class="notranslate">flashes()</code> method provided
+by the <a href="templates.html#twig-app-variable" class="reference internal">Twig global app variable</a>:</p>
+<div translate="no" data-loc="26" class="notranslate codeblock codeblock-length-md codeblock-html+twig codeblock-twig">
+        <div class="codeblock-scroll">
+        <pre class="codeblock-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre>
+        <pre class="codeblock-code"><code><span class="hljs-comment">{{ '{#' }} templates/base.html.twig {{ '#}' }}</span><span class="xml">
+
+</span><span class="hljs-comment">{{ '{#' }} read and display just one flash message type {{ '#}' }}</span><span class="xml">
+</span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">for</span></span> message in app.flashes('notice') %\}</span><span class="xml">
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"flash-notice"</span>&gt;</span>
+        </span><span class="hljs-template-variable">{{ '{{' }} message {{ '}}' }}</span><span class="xml">
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">endfor</span></span> {{ '%}' }}</span><span class="xml">
+
+</span><span class="hljs-comment">{{ '{#' }} read and display several types of flash messages #\}</span><span class="xml">
+</span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">for</span></span> label, messages in app.flashes(['success', 'warning']) %}</span><span class="xml">
+    </span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">for</span></span> message in messages {{ '%}' }}</span><span class="xml">
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"flash-</span></span></span><span class="hljs-template-variable">{{'{{'}} label {{'}}'}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span>
+            </span><span class="hljs-template-variable">{{ '{{' }} message {{ '}}' }}</span><span class="xml">
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    </span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">endfor</span></span> {{ '%}' }}</span><span class="xml">
+</span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">endfor</span></span> {{ '%}' }}</span><span class="xml">
+
+</span><span class="hljs-comment">{{ '{#' }} read and display all flash messages {{ '#}' }}</span><span class="xml">
+</span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">for</span></span> label, messages in app.flashes {{ '%}' }}</span><span class="xml">
+    </span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">for</span></span> message in messages {{ '%}' }}</span><span class="xml">
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"flash-</span></span></span><span class="hljs-template-variable">{{'{{'}} label {{'}}'}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span>
+            </span><span class="hljs-template-variable">{{ '{{' }} message {{ '}}' }}</span><span class="xml">
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    </span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">endfor</span></span> {{ '%}' }}</span><span class="xml">
+</span><span class="hljs-template-tag">{{ '{%' }} <span class="hljs-name"><span class="hljs-keyword">endfor</span></span> {{ '%}' }}</span></code></pre>
+    </div>
+</div>
+<p>It's common to use <code translate="no" class="notranslate">notice</code>, <code translate="no" class="notranslate">warning</code> and <code translate="no" class="notranslate">error</code> as the keys of the
+different types of flash messages, but you can use any key that fits your
+needs.</p>
+<div class="admonition admonition-tip ">
+    <p class="admonition-title">
+                    <svg fill="none" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                <span>Tip</span>
+    </p><p>You can use the
+<a href="https://github.com/symfony/symfony/blob/5.4/src/Symfony/Component/HttpFoundation/Session/Flash/FlashBagInterface.php#method_peek" class="reference external" title="Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface::peek()" rel="external noopener noreferrer" target="_blank">peek()</a>
+method instead to retrieve the message while keeping it in the bag.</p>
+</div>
+<span id="request-object-info"></span>
+</div>
+</div>
+
+{% endblock %}

@@ -8,18 +8,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/examples/modal", name="modal_")
+ * @Route("/examples/flash", name="flash_")
  */
-class ModalController extends AbstractController
+class FlashController extends AbstractController
 {
-    const PREFIX = 'modal_';
+    const PREFIX = 'flash_';
 
     /**
      * @Route("/", name="index", methods={"GET"})
      */
     public function index(): Response
     {
-        return $this->render('modal/index.html.twig', [
+        $this->addFlash('info', "info");
+        $this->addFlash('success', "success");
+        $this->addFlash('warning', "warning");
+      return $this->render('flash/index.html.twig', [
         ]);
     }
 }
