@@ -1,0 +1,131 @@
+{{ form_start(form) }}
+    {# form_widget(form) #}
+    <div class="row">
+        <div class="col">
+        {{ form_label(form.docType) }}
+        </div>
+	
+        <div class="col">
+        {{ form_label(form.docNumber) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.nationality) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.origin) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_widget(form.docType) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.docNumber) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.nationality) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.origin) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_label(form.name) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.surname1) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.surname2) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_widget(form.name) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.surname1) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.surname2) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_label(form.home) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.cp) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.city) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_widget(form.home) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.cp) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.city) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_label(form.bookingDate) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.checkinDate) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.roomName) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.bookingPreviously) }}
+        </div>
+        <div class="col">
+        {{ form_label(form.nightNumber) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_widget(form.bookingDate) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.checkinDate) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.roomName) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.bookingPreviously) }}
+        </div>
+        <div class="col">
+        {{ form_widget(form.nightNumber) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_label(form.travelReason) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_widget(form.travelReason) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_label(form.notes) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        {{ form_widget(form.notes) }}
+        </div>
+    </div>
+    <button class="btn">{{ button_label|default('Guardar') }}</button>
+{{ form_end(form) }}

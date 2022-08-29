@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New BookOld{% endblock %}
+
+{% block body %}
+    <h1>Crea una nueva reserva en la Tabla</h1>
+
+    {{ include('book_old/_form.html.twig') }}
+
+    <a href="{{ path(prefix ~ 'index') }}">back to list</a>
+{% endblock %}
