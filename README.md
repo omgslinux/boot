@@ -15,6 +15,7 @@ this manually, just follow the steps below.
 
 Edit extra section in composer.json:
 
+    ...
     "extra": {
         "symfony": {
             "allow-contrib": false,
@@ -25,6 +26,7 @@ Edit extra section in composer.json:
             "public/components/": ["type:component"]
         }
     },
+    ...
 
 Install bootstrap 4
 
