@@ -33,13 +33,14 @@ Edit the base template to use the basic components
     </head>
     <body>
     ...
-          {% block javascripts %}
-      <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      <script src="{{ asset('/components/jquery.slim.js') }}"></script>
-      <!-- The bootstrap bundle includes the optional popper.js -->
-      <script src="{{ asset('/components/js/bootstrap.bundle.min.js') }}"></script>
-          {% endblock %}
+      {% block javascripts %}
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="{{ asset('components/jquery.slim.js') }}"></script>
+        <!-- The bootstrap bundle includes the optional popper.js -->
+        <script src="{{ asset('components/js/bootstrap.bundle.min.js') }}"></script>
+        {# encore_entry_script_tags('app') #}
+      {% endblock %}
     </body>
 
 Done!
