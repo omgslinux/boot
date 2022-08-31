@@ -46,15 +46,30 @@
             {% endfor %}
         {% endfor %}
       {% endblock %}
-        {{ include('menu.html.twig') }}
+      <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+        <div class="navbar-nav-scroll">
+          <ul class="navbar-nav bd-navbar-nav flex-row">
+          {% block navbar %}
+            {{ include('menu.html.twig') }}
+          {% endblock %}
+          </ul>
+        </div>
+      </header>
+
       <div class="container">
         <div class="row flex-xl-nowrap">
           {% block toc %}
           <nav class="collapse bd-links" id="bd-docs-nav"><div class="bd-toc-item"></div>
           </nav>
         {% endblock %}
+      <div class="d-none d-xl-block col-xl-2 bd-toc">
+        <ul class="section-nav">
         {% block toc_entries %}{% endblock %}
-        {% block main %}{% endblock %}
+        </ul>
+      </div>
+          <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+            {% block main %}{% endblock %}
+          </main>
         {% block body %}{% endblock %}
         </div>
       </div>
