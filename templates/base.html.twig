@@ -10,9 +10,9 @@
         {% block stylesheets %}
           <!-- Bootstrap core CSS -->
         <link rel="stylesheet" href="{{ asset('components/css/bootstrap.css') }}" />
-        <!-- Documentation extras -->
+        {#}<!-- Documentation extras -->
         <link href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" rel="stylesheet">
-        <link href="https://getbootstrap.com/docs/4.3/assets/css/docs.min.css" rel="stylesheet">
+        <link href="https://getbootstrap.com/docs/4.3/assets/css/docs.min.css" rel="stylesheet"> #}
         <!-- Your custom styles (optional) -->
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
             {# encore_entry_link_tags('app') #}
@@ -47,19 +47,29 @@
         {% endfor %}
       {% endblock %}
       <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+        {# Start left side #}
+        {% set liclass = "nav-item" %}{% set aclass = "nav-link" %}
         <div class="navbar-nav-scroll">
           <ul class="navbar-nav bd-navbar-nav flex-row">
-          {% block navbar %}
             {{ include('menu.html.twig') }}
-          {% endblock %}
           </ul>
         </div>
+        {# End left side #}
+        {# Start right side #}
+        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+          <li class="nav-item dropdown">
+            {{ include('menu.html.twig') }}
+          </li>
+        </ul>
+        {# End right side #}
       </header>
 
-      <div class="container">
+      {# Una vez acabo el header, container-fluid hasta el final del body #}
+      <div class="container-fluid">
         <div class="row flex-xl-nowrap">
           {% block toc %}
           <nav class="collapse bd-links" id="bd-docs-nav"><div class="bd-toc-item"></div>
+            {{ include('menu.html.twig') }}
           </nav>
         {% endblock %}
       <div class="d-none d-xl-block col-xl-2 bd-toc">
