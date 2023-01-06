@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test Phpreader{% endblock %}
+
+{% block main %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+{% for empresa in empresas %}
+    <h1>Empresa {{ empresa.name }}</h1>
+
+    <h2>Accionistas</h2>
+    {% if empresa.shareholders|length %}
+        <p>Total: {{ empresa.shareholders|length }}</p>
+        <div class="row">
+            <div class="col-5">Nombre</div>
+            <div class="col-1">Pais</div>
+            <div class="col-1">Tipo</div>
+            <div class="col-1">Direct %</div>
+            <div class="col-1">Total %</div>
+        </div>
+        {% for c in empresa.shareholders %}
+            <div class="row">
+                <div class="col-5">{{ c.Nombre }}</div>
+                <div class="col-1">{{ c.Pais }}</div>
+                <div class="col-1">{{ c.Tipo }}</div>
+                <div class="col-1">{{ c.Direct }}</div>
+                <div class="col-1">{{ c.Total }}</div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No hay accionistas</p>
+    {% endif %}
+
+
+    <h2>Participadas</h2>
+    {% if empresa.subsidiaries|length %}
+    <p>Total: {{ empresa.subsidiaries|length }}</p>
+        <div class="row">
+            <div class="col-5">Nombre</div>
+            <div class="col-1">Pais</div>
+            <div class="col-1">Tipo</div>
+            <div class="col-1">Direct %</div>
+            <div class="col-1">Total %</div>
+        </div>
+        {% for c in empresa.subsidiaries %}
+            <div class="row">
+                <div class="col-5">{{ c.Nombre }}</div>
+                <div class="col-1">{{ c.Pais }}</div>
+                <div class="col-1">{{ c.Tipo }}</div>
+                <div class="col-1">{{ c.Direct }}</div>
+                <div class="col-1">{{ c.Total }}</div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No hay participadas</p>
+    {% endif %}
+{% endfor %}
+{% endblock %}
