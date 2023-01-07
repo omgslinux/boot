@@ -9,27 +9,28 @@
 </style>
 
 {% for empresa in empresas %}
-    <h1>Empresa {{ empresa.name }}</h1>
+    <h1>Empresa {{ empresa.name }} ({{ empresa.class }})</h1>
 
     <h2>Accionistas</h2>
     {% if empresa.shareholders|length %}
         <p>Total: {{ empresa.shareholders|length }}</p>
-        <div class="row">
-            <div class="col-5">Nombre</div>
-            <div class="col-1">Pais</div>
-            <div class="col-1">Tipo</div>
-            <div class="col-1">Direct %</div>
-            <div class="col-1">Total %</div>
+        <div class="row font-weight-bold">
+            <div class="col-7 table-bordered">Nombre</div>
+            <div class="col-1 table-bordered">Pais</div>
+            <div class="col-1 table-bordered">Tipo</div>
+            <div class="col-1 table-bordered">Direct %</div>
+            <div class="col-1 table-bordered">Total %</div>
         </div>
         {% for c in empresa.shareholders %}
             <div class="row">
-                <div class="col-5">{{ c.Nombre }}</div>
-                <div class="col-1">{{ c.Pais }}</div>
-                <div class="col-1">{{ c.Tipo }}</div>
-                <div class="col-1">{{ c.Direct }}</div>
-                <div class="col-1">{{ c.Total }}</div>
+        <div class="col-7 table-bordered">{{ c.Nombre }}{% if c.via %} (via its funds){% endif %}</div>
+                <div class="col-1 table-bordered">{{ c.Pais }}</div>
+                <div class="col-1 table-bordered">{{ c.Tipo }}</div>
+                <div class="col-1 table-bordered">{{ c.Direct }}</div>
+                <div class="col-1 table-bordered">{{ c.Total }}</div>
             </div>
         {% endfor %}
+        <br>
     {% else %}
         <p>No hay accionistas</p>
     {% endif %}
@@ -38,24 +39,25 @@
     <h2>Participadas</h2>
     {% if empresa.subsidiaries|length %}
     <p>Total: {{ empresa.subsidiaries|length }}</p>
-        <div class="row">
-            <div class="col-5">Nombre</div>
-            <div class="col-1">Pais</div>
-            <div class="col-1">Tipo</div>
-            <div class="col-1">Direct %</div>
-            <div class="col-1">Total %</div>
+        <div class="row font-weight-bold">
+            <div class="col-7 table-bordered">Nombre</div>
+            <div class="col-1 table-bordered">Pais</div>
+            <div class="col-1 table-bordered">Tipo</div>
+            <div class="col-1 table-bordered">Direct %</div>
+            <div class="col-1 table-bordered">Total %</div>
         </div>
         {% for c in empresa.subsidiaries %}
             <div class="row">
-                <div class="col-5">{{ c.Nombre }}</div>
-                <div class="col-1">{{ c.Pais }}</div>
-                <div class="col-1">{{ c.Tipo }}</div>
-                <div class="col-1">{{ c.Direct }}</div>
-                <div class="col-1">{{ c.Total }}</div>
+                <div class="col-7 table-bordered">{{ c.Nombre }}</div>
+                <div class="col-1 table-bordered">{{ c.Pais }}</div>
+                <div class="col-1 table-bordered">{{ c.Tipo }}</div>
+                <div class="col-1 table-bordered">{{ c.Direct }}</div>
+                <div class="col-1 table-bordered">{{ c.Total }}</div>
             </div>
         {% endfor %}
     {% else %}
         <p>No hay participadas</p>
     {% endif %}
+    <hr>
 {% endfor %}
 {% endblock %}
