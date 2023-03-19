@@ -114,12 +114,15 @@ class PhpreaderController extends AbstractController
             'USLRM PARENT COMPANY SL.xls'
         ];
 
-        /*$inputFileNames = [
+        $inputFileNames = [
             '1953 GRUP SOLER CONSTRUCTORA SL.xls',
             'ACCENTURE SLU.xlsx',
+            'ABERTIS INFRAESTRUCTURAS SA.xlsx',
+            'ABBOTT LABORATORIES SA.xlsx',
             'AMBU A@@SLASH@@S.xlsx',
+            'APHARMA LUXCO.xlsx',
             //'BARCLAYS PLC.xlsx'
-        ];*/
+        ];
         $companies = [];
         $NombreSearch = [',', '.'];
         $NombreReplace = [' ', ''];
@@ -160,7 +163,8 @@ class PhpreaderController extends AbstractController
             //$sheetData = $spreadsheet->getActiveSheet()->toArray(false, true, true, true);
             $this->worksheet = $worksheet = $spreadsheet->getActiveSheet();
             $store = false;
-            foreach ($worksheet->getRowIterator(100) as $row) {
+            $result['total'] = $worksheet->getHighestRow();
+            foreach ($worksheet->getRowIterator() as $row) {
                 $cellIterator = $row->getCellIterator('A', 'F');
                 // This loops through all cells, even if a cell value is not set.
                 // For 'TRUE', we loop through cells only when their value is set.
@@ -168,6 +172,7 @@ class PhpreaderController extends AbstractController
                 // If this method is not called, the default value is 'false'.
                 $cellIterator->setIterateOnlyExistingCells(true); // This loops through all cells,
                 //$line = [];
+                $Mends = ['Leyenda', "Directores y gerentes previos", "Estructura de propiedad" ];
 
                 foreach ($cellIterator as $cell) {
                     //$line[$cell->getColumn()] = $cell->getValue();
@@ -176,10 +181,18 @@ class PhpreaderController extends AbstractController
                             $result['M'] = $rowIndex;
                         }
                     }
-                    if ($cell == 'Accionistas actuales') {
-                        if (empty($result['A'])) {
-                            $result['A'] = $rowIndex;
+                    if (!empty($result['M']) && empty($result['Mend']) && empty($result['A'])) {
+                        foreach ($Mends as $Mend) {
+                            if ($cell->getValue()==$Mend) {
+                                $result['Mend'] = $rowIndex;
+                            }
                         }
+                    }
+
+                    if ($cell == 'Accionistas actuales') {
+                        //if (empty($result['A'])) {
+                            $result['A'] = $rowIndex;
+                        //}
                     }
                     if ($cell == 'Participadas actuales') {
                         if (empty($result['P'])) {
@@ -189,15 +202,14 @@ class PhpreaderController extends AbstractController
                 }
             }
             $result['class'] = '';
-            $result['total'] = $rowIndex;
-            //dump($result);
+            dump($result);
             $this->results = $result;
             //die();
 
             $companies[] = [
                 'managers' => $this->generateManagers(),
-                'shareholders' => $this->generateShareholders(),
-                'subsidiaries' => $this->generateSubsidiaries(),
+                'shareholders' => [], //$this->generateShareholders(),
+                'subsidiaries' => [], //$this->generateSubsidiaries(),
                 'results' => $this->results,
             ];
         }
@@ -212,40 +224,25 @@ class PhpreaderController extends AbstractController
     public function generateManagers($write = false)
     {
         $managers = [];
-        if (!empty($this->results['M'])) {
-            foreach ($this->worksheet->getRowIterator($this->results['M'], $this->results['A']) as $row) {
-                $cellIterator = $row->getCellIterator('A', self::LASTCOLUMN);
-                $cellIterator->setIterateOnlyExistingCells(true);
-                $rowIndex = $row->getRowIndex();
-                $i = ''; // Inicializamos el indice en cada fila
-                //dump("A$rowIndex: " .$this->readValue('A'.$rowIndex));
-                $line = [];
-                /*if (!empty($this->readValue('G', $rowIndex))) {
-                    $datos = $this->readValue('G', $rowIndex);
-                }*/
-                //if ($class=='ORBIS') {
-                $end = false;
-                if (!empty($this->readValue('A'. $rowIndex))) {
-                    if ($this->readValue('A'. $rowIndex) == 'Leyenda') {
-                        $end = true;
-                    }
-                }
-                if (!$end) {
-                    if (!empty($this->readValue('G'. $rowIndex))) {
-                        $cell = $this->readValue('G'. $rowIndex);
-                        $datos = explode("\n", $cell);
-                        $cargo = $datos[count($datos)-1];
-                        $line = [
-                            'datos' => $cell,
-                            'Nombre' => $datos[0]??null,
-                            'Fecha' => $datos[1]??null,
-                            'Cargo' => $datos[2]??null,
-                            'row' => $rowIndex
-                        ];
-                    }
-                }
-                if (count($line)) {
-                    $managers[] = $line;
+        if (empty($this->results['M']) || empty($this->results['Mend'])) {
+            return $managers;
+        }
+
+        foreach ($this->worksheet->getRowIterator($this->results['M'], $this->results['Mend']) as $row) {
+            $cellIterator = $row->getCellIterator('A', 'N');
+            $cellIterator->setIterateOnlyExistingCells(true);
+            $rowIndex = $row->getRowIndex();
+
+            //dump($rowIndex);
+            // Buscamos la columna
+            $search = ["\n"]; // "\xa0"];
+            $replace = ["@@"]; //, " "];
+            foreach ($cellIterator as $cell) {
+                $lines = explode('@@', str_replace($search, $replace, $cell->getValue()));
+                //dump($lines);
+                if (count($lines)>2) {
+                    $managers[] = $lines;
+                    break;
                 }
             }
         }
@@ -277,34 +274,7 @@ class PhpreaderController extends AbstractController
                 break;
             }
 
-            /*if (count($colTitles)<6) {
-                foreach ($cellIterator as $cell) {
-                    $key = $cell->getColumn();
-                    $value = $cell->getValue();
-                    if ($value==$orbisKeys['Nombre'] || ($value==$sabiKeys['Nombre'])) {
-                        $colTitles['Nombre'] = $key;
-                        if ($value==$sabiKeys['Nombre']) {
-                            $keys = $sabiKeys;
-                        }
-                    }
-                    if ($value==$keys['Pais']) {
-                        $colTitles['Pais'] = $key;
-                    }
-                    if ($value==$keys['Tipo']) {
-                        $colTitles['Tipo'] = $key;
-                    }
-                    if ($value==$keys['Direct']) {
-                        $colTitles['Direct'] = $key;
-                    }
-                    if ($value==$keys['Total']) {
-                        $colTitles['Total'] = $key;
-                    }
-                }
-                $colsfound = false;
-            }*/
-            //dump("A$rowIndex: " .$this->readValue('A'.$rowIndex));
-
-            if (count($colTitles)<6) {
+            if (count($colTitles)<count($keys)) {
                 //dump($keys);
                 foreach ($cellIterator as $cell) {
                     $key = $cell->getColumn();
@@ -346,6 +316,7 @@ class PhpreaderController extends AbstractController
                     $keys = $orbisKeys; // Inicializamos por no haber accionistas
                 }
             } else {
+                $Nombre = null;
                 if (!empty($this->readValue($colTitles['Nombre'].$rowIndex))) {
                     $Nombre = $this->readValue($colTitles['Nombre'].$rowIndex);
                     $funds = stripos($Nombre, $viastr);
@@ -361,15 +332,34 @@ class PhpreaderController extends AbstractController
                             //$rowIndex = $limit;
                             $end = true;
                         } else {
-                            $line = [
-                                'Nombre' => $Nombre,
-                                'via' => $via,
-                                'Pais' => $this->readValue($colTitles['Pais'].$rowIndex),
-                                'Tipo' => $this->readValue($colTitles['Tipo'].$rowIndex),
-                                'Direct' => $this->readValue($colTitles['Direct'].$rowIndex),
-                                'Total' => $this->readValue($colTitles['Total'].$rowIndex),
-                                'row' => $rowIndex,
-                            ];
+                            if (strlen($Nombre)<5 && $this->readValue($colTitles['Pais'].$rowIndex)) {
+                                foreach ($cellIterator as $cell) {
+                                    if ($key==$keys['Pais']) {
+                                        break;
+                                    }
+                                    $key = $cell->getColumn();
+                                    $value= $cell->getValue();
+                                    //dump("row: $rowIndex, key: $key, value: $value, xfound: $xfound");
+                                    if (($key > 'A') && (strlen($value)>3)) {
+                                        //$xfound = true;
+                                        //$colTitles['Nombre'] = $key;
+                                        $Nombre = $value;
+                                        dump($colTitles);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (strlen($Nombre)>4) {
+                                $line = [
+                                    'Nombre' => $Nombre,
+                                    'via' => $via,
+                                    'Pais' => $this->readValue($colTitles['Pais'].$rowIndex),
+                                    'Tipo' => $this->readValue($colTitles['Tipo'].$rowIndex),
+                                    'Direct' => $this->readValue($colTitles['Direct'].$rowIndex),
+                                    'Total' => $this->readValue($colTitles['Total'].$rowIndex),
+                                    'row' => $rowIndex,
+                                ];
+                            }
                         }
                     }
                 } else {
@@ -437,10 +427,10 @@ class PhpreaderController extends AbstractController
     {
         $colTitles = $subsidiaries = [];
         $class = $this->results['class'];
-        if ($class == 'ORBIS') {
-            $keys = self::ORBISKEYS['P'];
-        } else {
+        if ($class == 'SABI') {
             $keys = self::SABIKEYS['P'];
+        } else {
+            $keys = self::ORBISKEYS['P'];
         }
         $foundColTitles = count($keys);
         //dump($foundColTitles);
@@ -521,15 +511,20 @@ class PhpreaderController extends AbstractController
                         //dump("i; $i, index: $index");
                         if (empty($colTitles['Nombre'])) {
                             // ORBIS, no tenemos la columna del nombre
-                            $xfound = false;
+                            //$xfound = false;
                             foreach ($cellIterator as $cell) {
+                                if ($key==$keys['Pais']) {
+                                    break;
+                                }
                                 $key = $cell->getColumn();
                                 $value= $cell->getValue();
                                 //dump("row: $rowIndex, key: $key, value: $value, xfound: $xfound");
-                                if (($key > 'A') && ($key<$keys['Pais']) && (strlen($value)>3) && (!$xfound)) {
-                                    $xfound = true;
-                                    $colTitles['Nombre'] = $key;
+                                if (($key > 'A') && (strlen($value)>3)) {
+                                    //$xfound = true;
+                                    //$colTitles['Nombre'] = $key;
+                                    $Nombre = $value;
                                     dump($colTitles);
+                                    break;
                                 }
                             }
                         }
@@ -538,11 +533,11 @@ class PhpreaderController extends AbstractController
                             if (!empty($this->readValue($colTitles['Nombre'].$rowIndex))) {
                                 $Nombre = $this->readValue($colTitles['Nombre'].$rowIndex);
                             }
-                            if (empty($colTitles['Tipo'])) {
-                                $Tipo = 'C';
-                            } else {
-                                $Tipo = $this->readValue($colTitles['Tipo'].$rowIndex);
-                            }
+                        }
+                        if (empty($colTitles['Tipo'])) {
+                            $Tipo = 'C';
+                        } else {
+                            $Tipo = $this->readValue($colTitles['Tipo'].$rowIndex);
                         }
                         $line = [
                             'index' => ++$index,

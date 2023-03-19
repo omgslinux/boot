@@ -15,17 +15,20 @@
     {% if empresa.managers|length %}
         <p>Total: {{ empresa.managers|length }}</p>
         <div class="row font-weight-bold">
-            <div class="col-5 table-bordered">Nombre</div>
-            <div class="col-2 table-bordered">Cargo</div>
-            <div class="col-5 table-bordered">Fecha</div>
+            <div class="col-5 table-bordered">Linea 1</div>
+            <div class="col-2 table-bordered">Linea 2</div>
+            <div class="col-5 table-bordered">Linea 3</div>
         </div>
-        {% for c in empresa.managers %}
-            <div class="row">
-                <div class="col-5 table-bordered">{{ c.Nombre }}</div>
-                <div class="col-2 table-bordered">{{ c.Cargo }}</div>
-                <div class="col-5 table-bordered">{{ c.Fecha }}</div>
-            </div>
+
+        <ol>
+        {% for manager in empresa.managers %}
+        <li>
+            {% for line in manager %}
+                {{ line }}
+            {% endfor %}
+            </li>
         {% endfor %}
+        </ol>
         <br>
     {% else %}
         <p>No hay managers</p>
